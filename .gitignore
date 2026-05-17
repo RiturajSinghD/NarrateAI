@@ -1,0 +1,17 @@
+# Local Environment Secret Credentials
+.env
+.env.local
+
+# Dependency Folders
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+
+# Local Media Assets Cache
+backend/public/speech-*.mp3
+backend/public/preview-*.mp3
+
+# Production Build Logs & IDE Files
+.DS_Store
+.vscode/
+dist/
