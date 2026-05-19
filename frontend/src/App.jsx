@@ -18,25 +18,25 @@ const VOICE_OPTIONS = [
       "Hey! I am Arjun. My voice is engineered to sound incredibly natural, handling pauses just like a human reader.",
   },
   {
-    label: "Jane (Ultra-Expressive Female - US HD)",
-    value: "en-US-Jane:DragonHDLatestNeural",
+    label: "Jane (Expressive Female - US)",
+    value: "en-US-JaneNeural", // FIXED: Cleared the invalid Dragon HD colon formatting
     sampleText:
-      "Hello! I am Jane, powered by Azures latest High Definition neural engine for premium expressiveness.",
+      "Hello! I am Jane, powered by Azure's expressive neural engine for premium speech synthesis.",
   },
   {
-    label: "Davis (Audiobook Male - US HD)",
-    value: "en-US-Davis:DragonHDLatestNeural",
+    label: "Davis (Audiobook Male - US)",
+    value: "en-US-DavisNeural", // FIXED: Replaced with valid Azure core voice string
     sampleText:
       "Welcome. I am Davis. I provide high-fidelity speech synthesis, perfect for long-form articles and storytelling.",
   },
   {
     label: "Ava (Expressive Female - US)",
-    value: "en-US-Ava:DragonHDLatestNeural",
+    value: "en-US-AvaNeural", // FIXED
     sampleText: "Hello! I am Ava, your standard expressive voice option.",
   },
   {
     label: "Brian (Natural Male - US)",
-    value: "en-US-Brian:DragonHDLatestNeural",
+    value: "en-US-BrianNeural", // FIXED
     sampleText:
       "Hey there! I am Brian, a natural sounding conversational voice.",
   },
