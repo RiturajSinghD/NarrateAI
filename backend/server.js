@@ -3,12 +3,25 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const fs = require("fs");
 const path = require("path");
+const mongoose = require("mongoose");
 
 // Service Module Imports
 const { extractArticleText } = require("./services/scraperService");
 const { synthesizeTextToFile } = require("./services/ttsService");
 
+// Authentication Gates & Controllers Imports
+const { protect } = require("./middleware/authMiddleware");
+const { registerUser, loginUser } = require("./controllers/authController");
+
 dotenv.config();
+
+// Connect to MongoDB Atlas or Local instance
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() =>
+    console.log("MongoDB Enterprise Data cluster linked successfully."),
+  )
+  .catch((err) => console.error("Database connection fault:", err));
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -31,11 +44,26 @@ app.use("/public", (req, res, next) => {
 
 app.use("/public", express.static(publicDirPath));
 
-// ENDPOINT 1: Main Audio Generator
-app.post("/api/generate-audio", async (req, res) => {
+// ==========================================
+// 🔐 AUTHENTICATION ROUTING ENDPOINTS
+// ==========================================
+app.post("/api/auth/register", registerUser);
+app.post("/api/auth/login", loginUser);
+
+// ==========================================
+// 🔊 CORE APPLICATION ENDPOINTS
+// ==========================================
+
+// ENDPOINT 1: Main Audio Generator (🚨 SECURED WITH JWT PROTECT MIDDLEWARE)
+app.post("/api/generate-audio", protect, async (req, res) => {
   try {
     const { text, url, type, voice } = req.body;
     let textToNarrate = "";
+
+    // Logging current user attached directly by your JWT middleware layer
+    console.log(
+      `Audio compilation processed for verified account: ${req.user.email}`,
+    );
 
     if (type === "url") {
       if (!url || !url.trim().startsWith("http")) {
@@ -79,7 +107,7 @@ app.post("/api/generate-audio", async (req, res) => {
   }
 });
 
-// ENDPOINT 2: Voice Actor Sample Previews
+// ENDPOINT 2: Voice Actor Sample Previews (Left public for unauthenticated sample testing)
 app.post("/api/preview-voice", async (req, res) => {
   try {
     const { voice, sampleText } = req.body;

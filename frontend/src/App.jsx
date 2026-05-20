@@ -8,15 +8,20 @@ import {
   PlayCircle,
   Pause,
   AudioLines,
+  LogOut,
 } from "lucide-react";
 
 // Component Module Imports
 import InputPanel from "./components/InputPanel";
 import AudioConsole from "./components/AudioConsole";
+import AuthModal from "./components/AuthModal"; // Full page gate layout
 
 const BACKEND_BASE = "http://localhost:5000";
 
 export default function App() {
+  // Track if a user is cleared to view the console panel
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [inputType, setInputType] = useState("text");
   const [text, setText] = useState("");
   const [url, setUrl] = useState("");
@@ -102,7 +107,11 @@ export default function App() {
     try {
       const response = await fetch(`${BACKEND_BASE}/api/generate-audio`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          // 🔥 FIXED: Pulls your signed web token from cache storage and ships it to Express middleware
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
         body: JSON.stringify({
           type: inputType,
           text: inputType === "text" ? text : undefined,
@@ -140,6 +149,20 @@ export default function App() {
 
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  const handleLogout = () => {
+    // 🔥 FIXED: Cleans out stored session hashes so entry guard flags on window reload cleanly
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setIsAuthenticated(false);
+    setAudioUrl("");
+    setText("");
+    setUrl("");
+  };
+
+  if (!isAuthenticated) {
+    return <AuthModal onLoginSuccess={() => setIsAuthenticated(true)} />;
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#111827] py-8 px-4 font-sans text-white">
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[160px] rounded-full pointer-events-none" />
@@ -154,20 +177,28 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between border-b border-white/10 pb-6 max-w-7xl mx-auto pt-4 mb-4"
         >
-          {/* Flex container uniting the icon and text with larger dimensions */}
           <div className="flex items-center gap-4">
             <img
               src="/favicon.ico"
               alt="NarrateAI Brand Logo"
               className="w-10 h-10 object-contain filter drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"
             />{" "}
-            <span className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm select-none">
+            <span className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent select-none">
               NarrateAI
             </span>
           </div>
+
+          {/* Action Button: Allows user to log out and return to authorization index */}
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/20 text-slate-300 hover:text-red-400 font-bold text-xs transition-all duration-300 shadow-md"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
         </motion.div>
 
-        {/* Modular Grid Container */}
+        {/* Core Control Dashboard Panels */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           <InputPanel
             inputType={inputType}
@@ -199,7 +230,7 @@ export default function App() {
           />
         </div>
 
-        {/* Core Media Node */}
+        {/* Embedded Audio Stream Controller Hook */}
         <audio
           ref={audioPlayerRef}
           src={audioUrl}
@@ -210,7 +241,7 @@ export default function App() {
             setCurrentTime(0);
           }}
           className="hidden"
-          key={audioUrl} // Forces re-render on new file generation
+          key={audioUrl}
         />
       </div>
     </main>
