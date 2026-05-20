@@ -1,6 +1,14 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { VOICE_OPTIONS } from "./constants/voices";
+import {
+  Mic,
+  Link2,
+  Download,
+  PlayCircle,
+  Pause,
+  AudioLines,
+} from "lucide-react";
 
 // Component Module Imports
 import InputPanel from "./components/InputPanel";
@@ -144,16 +152,16 @@ export default function App() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between border-b border-white/5 pb-4"
+          className="flex items-center justify-between border-b border-white/10 pb-6 max-w-7xl mx-auto pt-4 mb-4"
         >
-          <div className="flex items-center gap-3">
+          {/* Flex container uniting the icon and text with larger dimensions */}
+          <div className="flex items-center gap-4">
             <img
               src="/favicon.ico"
-              alt="NarrateAI Logo"
-              className="w-7 h-7 object-contain"
-            />
-
-            <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              alt="NarrateAI Brand Logo"
+              className="w-10 h-10 object-contain filter drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+            />{" "}
+            <span className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-sm select-none">
               NarrateAI
             </span>
           </div>
