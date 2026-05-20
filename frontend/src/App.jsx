@@ -146,9 +146,17 @@ export default function App() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between border-b border-white/5 pb-4"
         >
-          <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
-            NarrateAI
-          </span>
+          <div className="flex items-center gap-3">
+            <img
+              src="/favicon.ico"
+              alt="NarrateAI Logo"
+              className="w-7 h-7 object-contain"
+            />
+
+            <span className="text-2xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+              NarrateAI
+            </span>
+          </div>
         </motion.div>
 
         {/* Modular Grid Container */}
