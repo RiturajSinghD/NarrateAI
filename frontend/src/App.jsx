@@ -109,7 +109,6 @@ export default function App() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // 🔥 FIXED: Pulls your signed web token from cache storage and ships it to Express middleware
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
@@ -150,7 +149,6 @@ export default function App() {
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handleLogout = () => {
-    // 🔥 FIXED: Cleans out stored session hashes so entry guard flags on window reload cleanly
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setIsAuthenticated(false);
