@@ -1,6 +1,8 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { VOICE_OPTIONS } from "./constants/voices";
+import UserDropdown from "./components/UserDropdown";
+0;
 import {
   Mic,
   Link2,
@@ -187,13 +189,7 @@ export default function App() {
           </div>
 
           {/* Action Button: Allows user to log out and return to authorization index */}
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/20 text-slate-300 hover:text-red-400 font-bold text-xs transition-all duration-300 shadow-md"
-          >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </button>
+          <UserDropdown onLogout={handleLogout} />
         </motion.div>
 
         {/* Core Control Dashboard Panels */}
