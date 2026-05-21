@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Sun, LogOut, Settings } from "lucide-react";
+import { User, Sun, Moon, LogOut, Settings } from "lucide-react";
 import ProfileModal from "./ProfileModal";
 
 export default function UserDropdown({ onLogout }) {
@@ -9,15 +9,28 @@ export default function UserDropdown({ onLogout }) {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const dropdownRef = useRef(null);
 
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme ? savedTheme === "dark" : true;
+  });
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (isDarkMode) {
+      root.setAttribute("data-theme", "dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.setAttribute("data-theme", "light");
+      localStorage.setItem("theme", "light");
+    }
+  }, [isDarkMode]);
+
   // Retrieve cached user info safely from local storage
-  // We parse localStorage here inside the render scope, or via the trigger state
-  // to grab updated info immediately when a user changes their name
   const cachedUser = JSON.parse(localStorage.getItem("user")) || {
     name: "User Account",
     email: "user@example.com",
   };
 
-  // Extract initials for the profile avatar token dynamically
   const initials = cachedUser.name
     .split(" ")
     .map((n) => n[0])
@@ -25,7 +38,6 @@ export default function UserDropdown({ onLogout }) {
     .toUpperCase()
     .substring(0, 2);
 
-  // Close dropdown automatically if clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -35,6 +47,11 @@ export default function UserDropdown({ onLogout }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleThemeToggle = () => {
+    setIsDarkMode((prev) => !prev);
+    setIsOpen(false);
+  };
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -54,35 +71,40 @@ export default function UserDropdown({ onLogout }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.15 }}
-            className="absolute right-0 mt-3 w-52 rounded-2xl border border-white/10 bg-[#0f172a]/95 p-1.5 shadow-2xl backdrop-blur-2xl text-slate-300 z-50 overflow-hidden"
+            className="absolute right-0 mt-3 w-52 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-[#0f172a]/95 p-1.5 shadow-2xl backdrop-blur-2xl text-slate-700 dark:text-slate-300 z-50 overflow-hidden transition-colors duration-300"
           >
-            {/* Menu Options Matrix */}
             <div className="space-y-0.5">
               {/* Option 1: Profile Settings Trigger */}
               <button
                 onClick={() => {
-                  setShowProfileModal(true); //Opens the modal settings overlay panel
-                  setIsOpen(false); // Closes the small drop menu panel container
+                  setShowProfileModal(true);
+                  setIsOpen(false);
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 text-left text-xs font-semibold hover:text-white transition-all group"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent text-left text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-all group"
               >
-                <Settings className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors" />
+                <Settings className="w-4 h-4 text-slate-400 group-hover:text-cyan-500 transition-colors" />
                 Profile Settings
               </button>
 
-              {/* Option 2: Active Workspace Dark/Light Theme Switcher */}
+              {/* Option 2: Theme Toggler */}
               <button
-                onClick={() => {
-                  console.log("Toggling theme...");
-                  setIsOpen(false);
-                }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/5 text-left text-xs font-semibold hover:text-white transition-all group"
+                onClick={handleThemeToggle}
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 border border-transparent text-left text-xs font-semibold hover:text-slate-900 dark:hover:text-white transition-all group"
               >
-                <Sun className="w-4 h-4 text-slate-400 group-hover:text-yellow-400 transition-colors" />
-                Interface Theme
+                {isDarkMode ? (
+                  <>
+                    <Sun className="w-4 h-4 text-slate-400 group-hover:text-yellow-400 transition-colors" />
+                    Switch Light Mode
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+                    Switch Dark Mode
+                  </>
+                )}
               </button>
 
-              <div className="h-px bg-white/5 my-1" />
+              <div className="h-px bg-slate-200 dark:bg-white/5 my-1" />
 
               {/* Option 3: Sign Out Account */}
               <button
@@ -90,9 +112,9 @@ export default function UserDropdown({ onLogout }) {
                   setIsOpen(false);
                   onLogout();
                 }}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/10 border border-transparent hover:border-red-500/10 text-left text-xs font-semibold text-slate-400 hover:text-red-400 transition-all group"
+                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-red-500/10 border border-transparent text-left text-xs font-semibold text-slate-400 hover:text-red-500 transition-all group"
               >
-                <LogOut className="w-4 h-4 text-slate-400 group-hover:text-red-400 transition-colors" />
+                <LogOut className="w-4 h-4 text-slate-400 group-hover:text-red-500 transition-colors" />
                 Sign Out Account
               </button>
             </div>
@@ -100,12 +122,11 @@ export default function UserDropdown({ onLogout }) {
         )}
       </AnimatePresence>
 
-      {/* INJECTED PROFILE OVERLAY MODAL */}
       <AnimatePresence>
         {showProfileModal && (
           <ProfileModal
             onClose={() => setShowProfileModal(false)}
-            onProfileUpdate={() => setRefreshTrigger((prev) => prev + 1)} // Increments to force component state synchronization update
+            onProfileUpdate={() => setRefreshTrigger((prev) => prev + 1)}
           />
         )}
       </AnimatePresence>

@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { VOICE_OPTIONS } from "./constants/voices";
 import UserDropdown from "./components/UserDropdown";
-0;
 import {
   Mic,
   Link2,
@@ -24,6 +23,12 @@ export default function App() {
   // Track if a user is cleared to view the console panel
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  //THEME SYNC ENGINE: Pull state settings directly from local storage cache
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    return savedTheme ? savedTheme === "dark" : true;
+  });
+
   const [inputType, setInputType] = useState("text");
   const [text, setText] = useState("");
   const [url, setUrl] = useState("");
@@ -39,6 +44,32 @@ export default function App() {
 
   const audioPlayerRef = useRef(null);
   const previewPlayerRef = useRef(null);
+
+  // Listen for changes to local storage data attributes across components
+  useEffect(() => {
+    const checkTheme = () => {
+      const currentTheme = localStorage.getItem("theme") || "dark";
+      setIsDarkMode(currentTheme === "dark");
+    };
+
+    // Run baseline check on mount
+    checkTheme();
+
+    // Setup listener hook for click event updates inside the user dropdown module
+    window.addEventListener("storage", checkTheme);
+
+    // Custom mutation fallback tracking for same-window updates
+    const observer = new MutationObserver(() => checkTheme());
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme", "class"],
+    });
+
+    return () => {
+      window.removeEventListener("storage", checkTheme);
+      observer.disconnect();
+    };
+  }, []);
 
   const formatTime = (timeInSeconds) => {
     if (isNaN(timeInSeconds) || !isFinite(timeInSeconds)) return "00:00";
@@ -164,9 +195,26 @@ export default function App() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#111827] py-8 px-4 font-sans text-white">
-      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-cyan-500/10 blur-[160px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-purple-500/10 blur-[160px] rounded-full pointer-events-none" />
+    <main
+      className={`relative min-h-screen overflow-hidden py-8 px-4 font-sans transition-colors duration-500 ${
+        isDarkMode
+          ? "bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#111827] text-white"
+          : "bg-gradient-to-br from-slate-50 via-slate-100 to-blue-50 text-slate-900"
+      }`}
+    >
+      {/* Dynamic Ambient Background Aura Filters */}
+      <div
+        className={`absolute top-0 left-0 w-[500px] h-[500px] rounded-full pointer-events-none blur-[160px] transition-opacity duration-500 ${
+          isDarkMode ? "bg-cyan-500/10 opacity-100" : "bg-cyan-500/5 opacity-70"
+        }`}
+      />
+      <div
+        className={`absolute bottom-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none blur-[160px] transition-opacity duration-500 ${
+          isDarkMode
+            ? "bg-purple-500/10 opacity-100"
+            : "bg-purple-500/5 opacity-70"
+        }`}
+      />
 
       <div className="relative max-w-7xl mx-auto space-y-6 z-10">
         <audio ref={previewPlayerRef} className="hidden" />
@@ -175,20 +223,32 @@ export default function App() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between border-b border-white/10 pb-6 max-w-7xl mx-auto pt-4 mb-4"
+          className={`flex items-center justify-between border-b pb-6 max-w-7xl mx-auto pt-4 mb-4 transition-colors duration-300 ${
+            isDarkMode ? "border-white/10" : "border-slate-200"
+          }`}
         >
           <div className="flex items-center gap-4">
             <img
               src="/favicon.ico"
               alt="NarrateAI Brand Logo"
-              className="w-10 h-10 object-contain filter drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+              className={`w-10 h-10 object-contain filter transition-all duration-300 ${
+                isDarkMode
+                  ? "drop-shadow-[0_0_15px_rgba(34,211,238,0.4)]"
+                  : "drop-shadow-[0_2px_8px_rgba(15,23,42,0.1)]"
+              }`}
             />{" "}
-            <span className="text-3xl sm:text-4xl font-black tracking-tight bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent select-none">
+            <span
+              className={`text-3xl sm:text-4xl font-black tracking-tight select-none transition-all duration-300 ${
+                isDarkMode
+                  ? "bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent"
+                  : "bg-gradient-to-r from-cyan-600 to-blue-700 bg-clip-text text-transparent"
+              }`}
+            >
               NarrateAI
             </span>
           </div>
 
-          {/* Action Button: Allows user to log out and return to authorization index */}
+          {/* Interactive Profile Pill Component Hub */}
           <UserDropdown onLogout={handleLogout} />
         </motion.div>
 
