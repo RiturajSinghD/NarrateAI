@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@azure/storage-blob": "^12.31.0",
     "@mozilla/readability": "^0.6.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
@@ -19,6 +20,7 @@
     "jsonwebtoken": "^9.0.3",
     "microsoft-cognitiveservices-speech-sdk": "^1.50.0",
     "mongoose": "^9.6.2",
+    "multer": "^2.1.1",
     "openai": "^6.38.0"
   }
 }
