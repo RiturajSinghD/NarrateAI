@@ -102,4 +102,74 @@ async function loginUser(req, res) {
   }
 }
 
-module.exports = { registerUser, loginUser };
+/**
+ * ROUTE:  PUT /api/auth/profile
+ * DESC:   Update user profile settings (Name, Email, Password)
+ * ACCESS: Private (Requires JWT token)
+ */
+async function updateUserProfile(req, res) {
+  try {
+    // req.user is supplied directly by your protect middleware
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User account not found." });
+    }
+
+    const { name, email, currentPassword, newPassword } = req.body;
+
+    // 1. If user is trying to change their email, ensure it isn't already taken
+    if (email && email !== user.email) {
+      const emailExists = await User.findOne({ email });
+      if (emailExists) {
+        return res
+          .status(400)
+          .json({ error: "This email address is already in use." });
+      }
+      user.email = email;
+    }
+
+    // 2. Update name if provided
+    if (name) user.name = name;
+
+    // 3. Handle password change safely
+    if (newPassword) {
+      if (!currentPassword) {
+        return res
+          .status(400)
+          .json({
+            error: "Current password is required to set a new password.",
+          });
+      }
+
+      // Check if the old password input matches database storage
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ error: "Incorrect current password." });
+      }
+
+      // Hash the new password safely
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    const updatedUser = await user.save();
+
+    // Generate a fresh token reflecting their updated account state
+    return res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      token: jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
+        expiresIn: "30d",
+      }),
+    });
+  } catch (error) {
+    console.error("Profile Update Exception:", error);
+    return res
+      .status(500)
+      .json({ error: "Server error updating profile settings." });
+  }
+}
+
+module.exports = { registerUser, loginUser, updateUserProfile };

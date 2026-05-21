@@ -11,7 +11,11 @@ const { synthesizeTextToFile } = require("./services/ttsService");
 
 // Authentication Gates & Controllers Imports
 const { protect } = require("./middleware/authMiddleware");
-const { registerUser, loginUser } = require("./controllers/authController");
+const {
+  registerUser,
+  loginUser,
+  updateUserProfile,
+} = require("./controllers/authController");
 
 dotenv.config();
 
@@ -49,6 +53,7 @@ app.use("/public", express.static(publicDirPath));
 // ==========================================
 app.post("/api/auth/register", registerUser);
 app.post("/api/auth/login", loginUser);
+app.put("/api/auth/profile", protect, updateUserProfile);
 
 // ==========================================
 // 🔊 CORE APPLICATION ENDPOINTS
