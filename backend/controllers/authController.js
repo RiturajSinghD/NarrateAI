@@ -25,7 +25,6 @@ async function registerUser(req, res) {
         .json({ error: "All profile registration fields are required." });
     }
 
-    // Check if user record already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res
@@ -72,7 +71,6 @@ async function loginUser(req, res) {
         .json({ error: "Email and password fields are required." });
     }
 
-    // Verify user exists
     const user = await User.findOne({ email });
     if (!user) {
       return res
@@ -80,7 +78,6 @@ async function loginUser(req, res) {
         .json({ error: "Invalid credentials: Email not found." });
     }
 
-    // Evaluate password input against hashed storage sequence using bcrypt
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res
@@ -109,7 +106,6 @@ async function loginUser(req, res) {
  */
 async function updateUserProfile(req, res) {
   try {
-    // req.user is supplied directly by your protect middleware
     const user = await User.findById(req.user._id);
 
     if (!user) {
@@ -118,7 +114,6 @@ async function updateUserProfile(req, res) {
 
     const { name, email, currentPassword, newPassword } = req.body;
 
-    // 1. If user is trying to change their email, ensure it isn't already taken
     if (email && email !== user.email) {
       const emailExists = await User.findOne({ email });
       if (emailExists) {
@@ -129,40 +124,32 @@ async function updateUserProfile(req, res) {
       user.email = email;
     }
 
-    // 2. Update name if provided
     if (name) user.name = name;
 
-    // 3. Handle password change safely
     if (newPassword) {
       if (!currentPassword) {
-        return res
-          .status(400)
-          .json({
-            error: "Current password is required to set a new password.",
-          });
+        return res.status(400).json({
+          error: "Current password is required to set a new password.",
+        });
       }
 
-      // Check if the old password input matches database storage
       const isMatch = await bcrypt.compare(currentPassword, user.password);
       if (!isMatch) {
         return res.status(401).json({ error: "Incorrect current password." });
       }
 
-      // Hash the new password safely
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(newPassword, salt);
     }
 
     const updatedUser = await user.save();
 
-    // Generate a fresh token reflecting their updated account state
+    // OPTIMIZED: Leveraged generateToken helper here to clear dead logic blocks
     return res.status(200).json({
       _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      token: jwt.sign({ id: updatedUser._id }, process.env.JWT_SECRET, {
-        expiresIn: "30d",
-      }),
+      token: generateToken(updatedUser._id),
     });
   } catch (error) {
     console.error("Profile Update Exception:", error);

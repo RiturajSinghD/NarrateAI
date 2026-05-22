@@ -47,7 +47,7 @@ export default function ProfileModal({ onClose, onProfileUpdate }) {
         );
       }
 
-      // 🔐 Success! Sync local browser caches with new updates
+      //Success! Sync local browser caches with new updates
       localStorage.setItem("token", data.token);
       localStorage.setItem(
         "user",

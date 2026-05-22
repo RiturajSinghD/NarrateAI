@@ -3,7 +3,7 @@ const router = express.Router();
 const Track = require("../models/Track");
 const { protect } = require("../middleware/authMiddleware");
 
-// 💾 @route  POST /api/vault/save
+// @route  POST /api/vault/save
 router.post("/save", protect, async (req, res) => {
   try {
     const { audioUrl, inputType, voice, contentPreview, customName } = req.body;
@@ -24,7 +24,7 @@ router.post("/save", protect, async (req, res) => {
   }
 });
 
-// 🔄 @route  PUT /api/vault/tracks/:id/rename
+// @route  PUT /api/vault/tracks/:id/rename
 router.put("/tracks/:id/rename", protect, async (req, res) => {
   try {
     const { customName } = req.body;
@@ -40,7 +40,7 @@ router.put("/tracks/:id/rename", protect, async (req, res) => {
   }
 });
 
-// 🗑️ @route  DELETE /api/vault/tracks/:id
+// @route  DELETE /api/vault/tracks/:id
 router.delete("/tracks/:id", protect, async (req, res) => {
   try {
     const track = await Track.findOneAndDelete({
@@ -57,7 +57,7 @@ router.delete("/tracks/:id", protect, async (req, res) => {
   }
 });
 
-// 📂 @route  GET /api/vault/tracks
+// @route  GET /api/vault/tracks
 router.get("/tracks", protect, async (req, res) => {
   try {
     const tracks = await Track.find({ user: req.user._id }).sort({

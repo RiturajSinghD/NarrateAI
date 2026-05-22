@@ -20,7 +20,7 @@ export default function DocToAudio() {
   const [error, setError] = useState("");
   const [audioUrl, setAudioUrl] = useState("");
 
-  // 🎙️ Handle Voice Sample Playback Trigger
+  // Handle Voice Sample Playback Trigger
   const handlePlayPreview = async () => {
     if (!selectedVoice) return;
     setPreviewLoading(true);
@@ -47,7 +47,7 @@ export default function DocToAudio() {
     }
   };
 
-  // 🚀 Handle Multipart Document Upload + Audio Synthesis Processing Pipeline
+  // Handle Multipart Document Upload + Audio Synthesis Processing Pipeline
   const handleGenerateAudio = async () => {
     if (!file) {
       setError("Please select or drop a valid document file first.");

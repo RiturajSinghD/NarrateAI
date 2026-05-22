@@ -6,7 +6,7 @@ import { FileText, Link2, FolderKanban, ArrowUpRight } from "lucide-react";
 export default function HomeHub() {
   const navigate = useNavigate();
 
-  // 🎨 Enhanced Enterprise Gradient Palette Matrix Mapping
+  //Enhanced Enterprise Gradient Palette Matrix Mapping
   const hubs = [
     {
       title: "Text to Audio",

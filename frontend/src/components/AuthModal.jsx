@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Lock, AudioLines, ArrowRight, AlertCircle } from "lucide-react";
+import { Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 
 export default function AuthModal({ onLoginSuccess }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,6 +12,7 @@ export default function AuthModal({ onLoginSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
     setError("");
     setLoading(true);
 
@@ -26,17 +27,13 @@ export default function AuthModal({ onLoginSuccess }) {
       });
 
       const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Authentication failed.");
-      }
+      if (!response.ok) throw new Error(data.error || "Authentication failed.");
 
       localStorage.setItem("token", data.token);
       localStorage.setItem(
         "user",
         JSON.stringify({ name: data.name, email: data.email }),
       );
-
       onLoginSuccess();
     } catch (err) {
       setError(
@@ -49,18 +46,15 @@ export default function AuthModal({ onLoginSuccess }) {
 
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center p-4 bg-gradient-to-br from-[#020617] via-[#0f172a] to-[#111827] overflow-hidden font-sans">
-      {/* Background Ambient Glows */}
       <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-cyan-500/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-purple-500/10 blur-[150px] rounded-full pointer-events-none" />
 
-      {/* Glassmorphic Auth Card */}
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 15 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         transition={{ type: "spring", duration: 0.6 }}
         className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-2xl text-white z-10"
       >
-        {/* Branding Hub */}
         <div className="flex flex-col items-center text-center mb-6">
           <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-4">
             <img
@@ -74,12 +68,11 @@ export default function AuthModal({ onLoginSuccess }) {
           </h2>
           <p className="text-xs text-slate-400 mt-2 max-w-[260px] leading-relaxed">
             {isLogin
-              ? "Sign in to access your dashboard workspace and generate premium AI speech tracks."
-              : "Create an account to begin transforming documents and links into high-fidelity narration audio."}
+              ? "Sign in to access your dashboard workspace."
+              : "Create an account to begin transforming documents."}
           </p>
         </div>
 
-        {/* Dynamic Error Feedback Alert Banner */}
         {error && (
           <motion.div
             initial={{ opacity: 0, y: -5 }}
@@ -92,7 +85,6 @@ export default function AuthModal({ onLoginSuccess }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Dynamic Full Name Input Field (Sign Up Mode Only) */}
           {!isLogin && (
             <motion.div
               initial={{ opacity: 0, x: -10 }}
@@ -113,7 +105,6 @@ export default function AuthModal({ onLoginSuccess }) {
             </motion.div>
           )}
 
-          {/* Email Input Field */}
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-1.5 pl-1">
               Email Address
@@ -132,7 +123,6 @@ export default function AuthModal({ onLoginSuccess }) {
             </div>
           </div>
 
-          {/* Password Input Field */}
           <div>
             <label className="block text-[11px] font-bold uppercase tracking-wider text-cyan-400 mb-1.5 pl-1">
               Password
@@ -151,7 +141,6 @@ export default function AuthModal({ onLoginSuccess }) {
             </div>
           </div>
 
-          {/* Action Submission Button */}
           <motion.button
             whileHover={{ scale: loading ? 1 : 1.01 }}
             whileTap={{ scale: loading ? 1 : 0.99 }}
@@ -168,7 +157,6 @@ export default function AuthModal({ onLoginSuccess }) {
           </motion.button>
         </form>
 
-        {/* View Switcher Footer */}
         <div className="mt-6 text-center text-xs text-slate-400 border-t border-white/5 pt-4">
           {isLogin ? "New to NarrateAI?" : "Already have an account?"}{" "}
           <button

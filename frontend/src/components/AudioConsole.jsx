@@ -7,6 +7,7 @@ import {
   RefreshCw,
   Volume2,
   CheckCircle2,
+  AlertCircle,
   X,
 } from "lucide-react";
 
@@ -32,19 +33,29 @@ export default function AudioConsole({
   // Custom Modal & Notification States
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [customName, setCustomName] = useState("");
-  const [toastMessage, setToastMessage] = useState("");
+
+  // Status feedback states
+  const [statusMessage, setStatusMessage] = useState("");
+  const [statusType, setStatusType] = useState(""); // "success" or "error"
 
   useEffect(() => {
     if (audioUrl && audioRef.current) {
       audioRef.current.load();
       setIsPlaying(false);
     }
+    return () => {
+      if (audioRef.current) audioRef.current.pause();
+    };
   }, [audioUrl]);
 
-  // Trigger floating UI toast notifications elegantly
-  const triggerToast = (msg) => {
-    setToastMessage(msg);
-    setTimeout(() => setToastMessage(""), 4000);
+  // Set explicit dynamic text responses matching your request guidelines
+  const triggerStatus = (msg, type) => {
+    setStatusMessage(msg);
+    setStatusType(type);
+    setTimeout(() => {
+      setStatusMessage("");
+      setStatusType("");
+    }, 5000);
   };
 
   const togglePlay = () => {
@@ -65,7 +76,6 @@ export default function AudioConsole({
     if (audioRef.current) setDuration(audioRef.current.duration);
   };
 
-  // 🔥 IMAGE 3 FIXED: Forces direct native browser file stream download bypassing Express proxy route errors
   const handleForceDownload = async (e) => {
     e.preventDefault();
     try {
@@ -82,11 +92,10 @@ export default function AudioConsole({
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
     } catch (err) {
-      triggerToast("⚠️ Download compilation pipeline dropped.");
+      triggerStatus("⚠️ Download compilation pipeline dropped.", "error");
     }
   };
 
-  // 🔥 IMAGE 1 & 2 FIXED: Custom Modal pipeline replaces old system alert prompts
   const handleSaveToVault = async () => {
     if (!audioUrl) return;
     setSaveLoading(true);
@@ -108,26 +117,18 @@ export default function AudioConsole({
       });
       if (!response.ok) throw new Error("Vault error.");
 
-      // ✅ SUCCESS TOAST DISPLAY: Exactly as requested!
-      triggerToast("✅ Track saved to vault successfully!");
+      //SUCCESS TEXT ROW: Placed cleanly under our buttons container
+      triggerStatus("Track saved to vault successfully!", "success");
     } catch (err) {
-      triggerToast("❌ Failed to commit save records.");
+      // ERROR TEXT ROW
+      triggerStatus("Failed to commit save records.", "error");
     } finally {
       setSaveLoading(false);
     }
   };
 
   return (
-    <div className="lg:col-span-5 rounded-[24px] border border-white/10 bg-slate-900/40 p-6 backdrop-blur-xl flex flex-col justify-between min-h-[360px] text-white relative select-none">
-      {/* 🌟 FLOATING SUCCESS TOAST COMPONENT */}
-      {toastMessage && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2.5 rounded-xl bg-slate-950 border border-emerald-500/30 text-emerald-400 font-bold text-xs flex items-center gap-2 shadow-2xl z-50 animate-bounce">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-          {toastMessage}
-        </div>
-      )}
-
-      {/* 🌟 EMBEDDED NAME CONFIGURATION MODAL DIALOG */}
+    <div className="lg:col-span-5 rounded-[24px] border border-white/10 bg-slate-900/40 p-6 backdrop-blur-xl flex flex-col justify-between min-h-[380px] text-white relative select-none">
       {showSaveModal && (
         <div className="absolute inset-0 rounded-[24px] bg-slate-950/90 backdrop-blur-md z-50 flex flex-col justify-center p-6 space-y-4">
           <div className="flex items-center justify-between">
@@ -214,26 +215,46 @@ export default function AudioConsole({
         )}
       </div>
 
+      {/* FOOTER ACTIONS HUB */}
       {audioUrl && (
-        <div className="grid grid-cols-2 gap-3 mt-8">
-          <button
-            onClick={handleForceDownload}
-            className="p-3.5 rounded-xl border border-white/10 bg-white/5 text-xs font-bold text-center flex items-center justify-center gap-2 hover:bg-white/10 text-white transition-all cursor-pointer"
-          >
-            <Download className="w-4 h-4" /> Download
-          </button>
-          <button
-            onClick={() => setShowSaveModal(true)}
-            disabled={saveLoading}
-            className="p-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-xs font-bold flex items-center justify-center gap-2 text-white hover:shadow-xl transition-all disabled:opacity-40 cursor-pointer"
-          >
-            {saveLoading ? (
-              <RefreshCw className="w-4 h-4 animate-spin" />
-            ) : (
-              <CloudLightning className="w-4 h-4" />
-            )}
-            {saveLoading ? "Saving..." : "Cloud Save"}
-          </button>
+        <div className="flex flex-col space-y-3 mt-8">
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={handleForceDownload}
+              className="p-3.5 rounded-xl border border-white/10 bg-white/5 text-xs font-bold text-center flex items-center justify-center gap-2 hover:bg-white/10 text-white transition-all cursor-pointer"
+            >
+              <Download className="w-4 h-4" /> Download
+            </button>
+            <button
+              onClick={() => setShowSaveModal(true)}
+              disabled={saveLoading}
+              className="p-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-xs font-bold flex items-center justify-center gap-2 text-white hover:shadow-xl transition-all disabled:opacity-40 cursor-pointer"
+            >
+              {saveLoading ? (
+                <RefreshCw className="w-4 h-4 animate-spin" />
+              ) : (
+                <CloudLightning className="w-4 h-4" />
+              )}
+              {saveLoading ? "Saving..." : "Cloud Save"}
+            </button>
+          </div>
+
+          {statusMessage && (
+            <div
+              className={`w-full py-2.5 px-4 rounded-xl border flex items-center justify-center gap-2 text-xs font-extrabold text-center transition-all ${
+                statusType === "success"
+                  ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+                  : "bg-red-500/10 border-red-500/20 text-red-400"
+              }`}
+            >
+              {statusType === "success" ? (
+                <CheckCircle2 className="w-4 h-4" />
+              ) : (
+                <AlertCircle className="w-4 h-4" />
+              )}
+              <span>{statusMessage}</span>
+            </div>
+          )}
         </div>
       )}
     </div>
