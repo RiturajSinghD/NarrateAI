@@ -65,7 +65,7 @@ NarrateAI is an enterprise-grade Knowledge Synthesis & Neural Text-to-Speech (TT
 
 ## 📂 Production Code Blueprint
 
-```text
+````text
 NarrateAI/
 ├── backend/
 │   ├── controllers/      # Route logic handlers (authController.js)
@@ -82,47 +82,53 @@ NarrateAI/
     └── main.jsx          # React virtual DOM initialization root
 
 
-⚡ Local Setup & Deployment Orchestration
-1. Repository Initializing
-Clone down the source code project layout and check the working directory:
+## ⚡ Local Setup & Deployment Orchestration
 
-Bash
+### 1. Repository Initializing
+Clone down the source code project layout and check the working directory:
+```bash
 git clone [https://github.com/RiturajSinghD/NarrateAI.git](https://github.com/RiturajSinghD/NarrateAI.git)
 cd NarrateAI
-2. Backend Environment Cryptographic Keys
+
+### 2. Backend Environment Cryptographic Keys
 Navigate inside your backend directory, install packages, and create an operational tracking .env variable configuration mapping details explicitly:
 
-Bash
+```bash
 cd backend
 npm install
-Configure your environmental .env file structure:
 
+#### Configure your environmental .env file structure:
+
+```bash
 Code snippet
 PORT=5000
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/narrateai
 JWT_SECRET=your_high_entropy_alphanumeric_jwt_secret_signing_key
 AZURE_SPEECH_KEY=your_microsoft_azure_cognitive_speech_subscription_key
-AZURE_SPEECH_REGION=eastus
-Kickstart your backend pipeline service:
+AZURE_SPEECH_REGION=your_speech_resource
 
-Bash
+
+#### Kickstart your backend pipeline service:
+```bash
 npm run dev
-3. Frontend App Core Spinup
+
+
+### 3. Frontend App Core Spinup
 Open a secondary terminal process split path window, check inside your frontend module workspace folder block, install dependencies, and run your Vite local deployment worker:
 
-Bash
+```bash
 cd frontend
 npm install
 npm run dev
 Open your browser engine portal link directly to http://localhost:5173 to interact with your local environment!
 
-🔒 Security & Code Compliance Regulations
+### 🔒 Security & Code Compliance Regulations
 Zero Dotenv Exposure: Your local .gitignore is fully hardened to exclude operational .env variables from ever leaking to public online repository streams.
 
 Stream Buffer Optimizations: Implements explicit native server cleaning sweeps (fs.unlinkSync), immediately erasing binary uploads to maintain clean operating memory constraints.
 
 Asymmetric Data Protection: No data read/write transactions are executed without running a JWT decryption gate checkout, making sure user records stay fully isolated.
 
-📄 License
+### 📄 License
 Distributed under the MIT Enterprise Studio License.
-```
+````
