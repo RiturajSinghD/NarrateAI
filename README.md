@@ -1,134 +1,288 @@
-# NarrateAI 🔊
+# NarrateAI
 
 [![Production Ready](https://img.shields.io/badge/status-production--ready-emerald?style=for-the-badge)]()
-[![Framework: Express](https://img.shields.io/badge/Backend-Express.js-bg-blue?style=for-the-badge&logo=express)]()
-[![Framework: React](https://img.shields.io/badge/Frontend-React.js--Vite-bg-cyan?style=for-the-badge&logo=react)]()
-[![Database: MongoDB](https://img.shields.io/badge/Database-MongoDB--Atlas-bg-green?style=for-the-badge&logo=mongodb)]()
-[![AI Service: Azure Speech](https://img.shields.io/badge/AI--Engine-Azure--Cognitive--TTS-purple?style=for-the-badge&logo=microsoftazure)]()
+[![Backend: Express](https://img.shields.io/badge/Backend-Express.js-blue?style=for-the-badge&logo=express)]()
+[![Frontend: React](https://img.shields.io/badge/Frontend-React.js--Vite-cyan?style=for-the-badge&logo=react)]()
+[![Database: MongoDB](https://img.shields.io/badge/Database-MongoDB--Atlas-green?style=for-the-badge&logo=mongodb)]()
+[![AI Service: Azure Speech](https://img.shields.io/badge/AI--Engine-Azure--Speech-purple?style=for-the-badge&logo=microsoftazure)]()
 
-NarrateAI is an enterprise-grade Knowledge Synthesis & Neural Text-to-Speech (TTS) Studio. Engineered for high-throughput translation workloads, the platform securely ingests raw copy scripts, crawls and filters web addresses, and handles multi-part binary document assets via an optimized backend extraction matrix. Extracted knowledge tokens are funneled through a high-fidelity Neural TTS pipeline and persistently structured inside a central secure storage layer.
+NarrateAI is an AI-powered Text-to-Speech platform that transforms raw text, blog articles, URLs, and uploaded documents into natural-sounding audio using Microsoft Azure Neural Speech Services.
 
----
-
-## 💎 Core Feature Architecture
-
-### 1. 📝 Deep Text Studio
-
-- **Glassmorphic Compositor:** Rich visual interface built with optimized state synchronization for managing long-form scripts or blog copy blocks.
-- **Persona Profiles:** Dynamic voice selection drawer utilizing explicit fallback data-hooks supporting a diverse roster of expressive multi-lingual voice characters.
-- **Low-Latency Previewing:** Dedicated micro-engine that lets users quickly test and listen to voice samples before kicking off a full narration generation sequence.
-
-### 2. 🔗 Web Scraper Link Engine
-
-- **Semantic Extraction:** Utilizes an asynchronous parser powered by `@mozilla/readability` and a virtualized `JSDOM` window tree to isolate central core article bodies while stripping away noisy headers, sidebars, and ads.
-- **Fail-Safe Abort Thresholds:** Implements an automated `AbortController` network gate. If a target web address hangs, the request automatically breaks on an 8-second execution barrier to protect active threads.
-
-### 3. 📁 Knowledge Store Document RAG Matrix
-
-- **Binary Stream Ingestion:** High-performance drag-and-drop file upload container supporting multipart `form-data` uploads for `.txt`, `.md`, `.docx`, and `.pdf` document profiles.
-- **Atomic Workspace Purges:** Instantly reads plain text data maps directly out of temp target disk uploads, processes content tokens, and immediately runs disk-wipe cleanups to completely prevent server storage pollution.
-
-### 4. 🗄️ Persistent Media Knowledge Vault
-
-- **Unified Database Tracking:** Tracks and binds historical narration asset logs directly to separate authenticated database schemas using Mongoose collections.
-- **Cross-Origin Streaming Core:** Customized audio controller utilizing direct browser binary blob stream generation, bypassing proxy data path traps and ensuring bulletproof downloads.
-- **Inline Dynamic Status:** Replaces absolute browser alerts with elegant success/error feedback widgets embedded directly into the player workflow container block.
-
-### 🔐 5. Session Gate & Cache Synchronization
-
-- **JWT Guard Middleware:** Every operational data-generation and storage route is secured behind an asymmetric HTTP Authorization header gate (`protect`).
-- **Dynamic Cache Relays:** Custom account mutation profile views that auto-sync name, email, and password records, seamlessly refreshing memory matrices inside local caches.
+The platform combines modern frontend engineering, secure backend APIs, document parsing pipelines, web article extraction, and cloud-based media storage into a single production-ready application.
 
 ---
 
-## 🛠️ Technology Stack Matrix
+# Features
 
-### ☁️ Cloud & AI Infrastructure Services
+## Deep Text Studio
 
-- **Azure Speech Service:** Leverages Microsoft Cognitive Services Neural Speech SDK for realistic audio synthesis with advanced human-like inflection, multi-accent configurations, and low-latency rendering.
-- **Azure Blob Storage Matrix:** Provides persistent cloud hosting infrastructure to warehouse, stream, secure, and deliver exported track binaries safely at scale.
-
-### Core Application Layer
-
-- **Frontend Framework:** React.js (v18+) compiled with an ultra-fast Vite optimization pipeline.
-- **Backend Runtime:** Node.js environment utilizing the modular Express.js server router.
-- **Database Modeling:** MongoDB Atlas cloud cluster structured via object data modeling (ODM) Mongoose abstraction layers.
-
-### Interface & Data Engineering
-
-- **Styling Foundation:** Tailwind CSS v4 Utility Engine.
-- **Motion Core:** Framer Motion (managing custom modular form transitions and view animations).
-- **Asset Vectors:** Lucide React Icon Engineering package.
-- **Stream Processing:** Multer engine integration for incoming binary document file streams.
+- Convert long-form text into realistic AI-generated speech
+- Smooth glassmorphic UI built using React + Tailwind CSS
+- Multi-language and multi-voice support
+- Real-time voice preview before full narration generation
+- Dynamic voice profile selection system
 
 ---
 
-## 📂 Production Code Blueprint
+## Web Scraper Link Engine
 
-````text
+Paste a blog/article URL and NarrateAI automatically extracts the readable content.
+
+### Powered By
+
+- `@mozilla/readability`
+- `JSDOM`
+- AbortController-based timeout handling
+
+### Capabilities
+
+- Removes ads, sidebars, and unnecessary clutter
+- Extracts only the main article body
+- Prevents hanging requests using an 8-second timeout guard
+
+---
+
+## Document-to-Audio Pipeline
+
+Upload supported document formats and instantly convert them into speech.
+
+### Supported Formats
+
+- `.txt`
+- `.md`
+- `.docx`
+- `.pdf`
+
+### Features
+
+- Multipart upload support using Multer
+- Automatic text extraction
+- Temporary file cleanup after processing
+- Memory-safe backend handling
+
+---
+
+## Azure-Powered AI Infrastructure
+
+### Azure Speech Service
+
+Uses Microsoft Azure Cognitive Speech Services for:
+
+- Human-like neural voice synthesis
+- Multi-accent voice rendering
+- Natural speech inflection
+- Low-latency audio generation
+
+### Azure Blob Storage
+
+Used for:
+
+- Cloud audio storage
+- Secure audio streaming
+- Downloadable narration assets
+- Persistent media hosting
+
+---
+
+## Persistent Media Vault
+
+- Stores generated narration history
+- Secure authenticated user-based access
+- Audio playback and download support
+- Media tracking using MongoDB + Mongoose
+
+---
+
+## Authentication & Security
+
+### Security Features
+
+- JWT-based route protection
+- Protected API middleware
+- Secure user authentication
+- Isolated user media records
+- Automatic local cache synchronization
+
+### File Safety
+
+- Uploaded files are deleted after processing
+- `.env` variables excluded using `.gitignore`
+- Prevents unnecessary disk storage pollution
+
+---
+
+# Tech Stack
+
+## Frontend
+
+- React.js
+- Vite
+- Tailwind CSS v4
+- Framer Motion
+- Lucide React
+
+---
+
+## Backend
+
+- Node.js
+- Express.js
+- MongoDB Atlas
+- Mongoose
+- Multer
+
+---
+
+## Cloud & AI
+
+- Microsoft Azure Speech Service
+- Azure Blob Storage
+
+---
+
+# Project Structure
+
+```text
 NarrateAI/
 ├── backend/
-│   ├── controllers/      # Route logic handlers (authController.js)
-│   ├── middleware/       # Token authorization guard gates (authMiddleware.js)
-│   ├── models/           # Mongoose schemas (User.js, Track.js)
-│   ├── routes/           # REST endpoints (vaultRoutes.js, audioRoutes.js)
-│   ├── services/         # Infrastructure workers (scraperService.js, ttsService.js)
-│   └── server.js         # Express app entry configuration mount point
-└── frontend/src/
-    ├── components/       # Reusable layout fragments (AudioConsole.jsx, InputPanel.jsx)
-    ├── constants/        # System configuration data records (voices.js)
-    ├── pages/            # Workflow dashboard views (HomeHub.jsx, MyVault.jsx)
-    ├── App.jsx           # Client-side SPA routing orchestration layout
-    └── main.jsx          # React virtual DOM initialization root
+│   ├── controllers/      # Route logic handlers
+│   ├── middleware/       # JWT auth middleware
+│   ├── models/           # Mongoose schemas
+│   ├── routes/           # API endpoints
+│   ├── services/         # Scraper & TTS services
+│   └── server.js         # Express entry point
+│
+└── frontend/
+    └── src/
+        ├── components/   # Reusable UI components
+        ├── constants/    # Voice configs & constants
+        ├── pages/        # Application pages
+        ├── App.jsx
+        └── main.jsx
+```
 
+---
 
-## ⚡ Local Setup & Deployment Orchestration
+# Local Setup
 
-### 1. Repository Initializing
-Clone down the source code project layout and check the working directory:
+## Clone Repository
+
 ```bash
-git clone [https://github.com/RiturajSinghD/NarrateAI.git](https://github.com/RiturajSinghD/NarrateAI.git)
+git clone https://github.com/RiturajSinghD/NarrateAI.git
 cd NarrateAI
+```
 
-### 2. Backend Environment Cryptographic Keys
-Navigate inside your backend directory, install packages, and create an operational tracking .env variable configuration mapping details explicitly:
+---
+
+# Backend Setup
+
+## Navigate to Backend
 
 ```bash
 cd backend
 npm install
+```
 
-#### Configure your environmental .env file structure:
+---
 
-```bash
-Code snippet
+## Create `.env` File
+
+```env
 PORT=5000
+
 MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/narrateai
-JWT_SECRET=your_high_entropy_alphanumeric_jwt_secret_signing_key
-AZURE_SPEECH_KEY=your_microsoft_azure_cognitive_speech_subscription_key
-AZURE_SPEECH_REGION=your_speech_resource
 
+JWT_SECRET=your_high_entropy_jwt_secret
 
-#### Kickstart your backend pipeline service:
+# Azure Speech Service
+AZURE_SPEECH_KEY=your_azure_speech_key
+AZURE_SPEECH_REGION=eastus
+
+# Azure Blob Storage
+AZURE_STORAGE_CONNECTION_STRING=your_storage_connection_string
+AZURE_STORAGE_CONTAINER_NAME=narrations
+```
+
+---
+
+## Start Backend Server
+
 ```bash
+cd backend
 npm run dev
+```
 
+Backend runs on:
 
-### 3. Frontend App Core Spinup
-Open a secondary terminal process split path window, check inside your frontend module workspace folder block, install dependencies, and run your Vite local deployment worker:
+```text
+http://localhost:5000
+```
+
+---
+
+# Frontend Setup
+
+Open another terminal:
 
 ```bash
 cd frontend
 npm install
 npm run dev
-Open your browser engine portal link directly to http://localhost:5173 to interact with your local environment!
+```
 
-### 🔒 Security & Code Compliance Regulations
-Zero Dotenv Exposure: Your local .gitignore is fully hardened to exclude operational .env variables from ever leaking to public online repository streams.
+Frontend runs on:
 
-Stream Buffer Optimizations: Implements explicit native server cleaning sweeps (fs.unlinkSync), immediately erasing binary uploads to maintain clean operating memory constraints.
+```text
+http://localhost:5173
+```
 
-Asymmetric Data Protection: No data read/write transactions are executed without running a JWT decryption gate checkout, making sure user records stay fully isolated.
+---
 
-### 📄 License
-Distributed under the MIT Enterprise Studio License.
-````
+# Application Workflow
+
+```text
+User Input
+   ↓
+Text / URL / Document Upload
+   ↓
+Backend Extraction Pipeline
+   ↓
+Azure Neural Speech Synthesis
+   ↓
+Audio Generation
+   ↓
+Azure Blob Storage Upload
+   ↓
+Streaming + Download Access
+```
+
+---
+
+# Core Highlights
+
+- AI-powered narration platform
+- Realistic Azure neural voices
+- URL article extraction engine
+- Document-to-audio conversion
+- Secure JWT authentication
+- Cloud-based media storage
+- Modern animated UI
+- Production-ready architecture
+
+---
+
+# Future Improvements
+
+- Podcast generation mode
+- AI summarization before narration
+- Voice cloning integration
+- Background music mixing
+- Multi-file batch processing
+- Language translation support
+- Audio waveform editor
+
+---
+
+# License
+
+Distributed under the MIT License.
